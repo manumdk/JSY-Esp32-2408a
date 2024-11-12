@@ -8,7 +8,7 @@
 
 // Pin: ZC (ESP32)
 #define ZC_PIN 38
-#define PIN_SSR gpio_num_t::GPIO_NUM_26
+#define PIN_SSR gpio_num_t::GPIO_NUM_25
 
 // Minimum delay to reach the voltage required for a gate current of 30mA.
 // delay_us = asin((gate_resistor * gate_current) / grid_volt_max) / pi * period_us
@@ -29,7 +29,7 @@ void Dimmer_setup() // Configuration du Dimmer
   // configuration dimmer
   dimmer_hard.begin(NORMAL_MODE, ON); // dimmer initialisation: name.begin(MODE, STATE)
   dimmer_hard.setPower(0);
-  dimmer_hard.setState(OFF);
+  //dimmer_hard.setState(OFF);
   Serial.println("Dimmer started...");
 }
 
@@ -42,6 +42,7 @@ void setup()
   pinMode(PIN_SSR, OUTPUT);
 
   Dimmer_setup();
+
 }
 
 uint32_t lastTime = 0;
@@ -54,7 +55,7 @@ void loop()
 
     Serial.printf("Duty cycle: %f, \n", dutyCycles[i]);
 
-    dimmer_hard.setPower(i * 100);
+    dimmer_hard.setPower(dutyCycles[i] * 100);
     if (i < 4)
     {
       i++;
@@ -63,7 +64,8 @@ void loop()
     {
       i = 0;
     }
+      lastTime = millis();
   }
 
-  lastTime = millis();
+
 }
